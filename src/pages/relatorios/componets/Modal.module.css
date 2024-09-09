@@ -1,0 +1,81 @@
+/* components/Modal.module.css */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .adcModal {
+    color: green;
+  }
+  
+  .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 35vh;
+  }
+  
+  .modal h2 {
+    margin-top: 0;
+  }
+  
+  .modal input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .modal button {
+    margin-right: 10px;
+  }
+  
+  .editM {
+    color: blue;
+  }
+  
+  .modal textarea {
+    width: 50vh;
+    height: 10vh;
+  }
+  
+  .create {
+    margin: 20px;
+    padding: 10px 10px;
+    font-size: medium;
+    background-color: rgb(82, 211, 82);
+    color: #fff;
+    border-radius: 10px;
+  }
+  
+  .create:hover {
+    background-color: green;
+    cursor: pointer;
+  }
+  
+  .cancel {
+    padding: 10px 10px;
+    font-size: medium;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .edit {
+    padding: 10px 10px;
+    color: white;
+    font-size: medium;
+    background-color: rgb(87, 87, 235);
+    border-radius: 10px;
+  }
+  
+  .edit:hover {
+    background-color: blue;
+    cursor: pointer;
+  }
+  

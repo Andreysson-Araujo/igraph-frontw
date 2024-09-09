@@ -1,0 +1,79 @@
+.container {
+  display: flex;
+}
+
+.menu {
+  flex: 1;
+}
+
+.content {
+  flex: 4;
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.head {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0; /* O cabeçalho permanece no topo ao rolar */
+}
+
+.tbody {
+  display: block;
+  max-height: 400px; /* Define uma altura máxima para o corpo da tabela */
+  overflow-y: auto; /* Habilita a barra de rolagem vertical */
+}
+
+.tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.th, .td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.create {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.edit {
+  margin-right: 10px;
+  background-color: #4e81f0;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.edit:hover {
+  background-color: blue;
+}
+
+.delete {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.delete:hover {
+  background-color: red;
+}

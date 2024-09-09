@@ -1,33 +1,70 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+.menuList {
+    list-style: none;
+    padding: 0;
   }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  
+  .menuList li {
+    position: relative; /* Necessário para posicionar o menu suspenso */
+    margin: 10px 0;
   }
+  
+  .menuList a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #0070f3;
+    border-radius: 5px;
+  }
+  
+  .menuList a:hover {
+    background-color: #005bb5;
+  }
+  
+  /* Estilos para o menu suspenso dentro de Configurações */
+  .settings {
+    position: relative; /* Necessário para posicionar o menu suspenso */
+    cursor: pointer;
+  }
+  
+  .settingsDropdown {
+    display: none; /* Oculta o menu suspenso por padrão */
+    position: absolute;
+    top: 100%; /* Posiciona abaixo do item principal */
+    left: 100%; /* Posiciona à direita do item principal */
+    background-color: #444;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 5px;
+    min-width: 150px; /* Largura mínima do menu suspenso */
+  }
+  
+  .settingsDropdown li {
+    margin: 0;
+  }
+  
+  .settingsDropdown a {
+    display: block;
+    padding: 10px 15px;
+    color: #fff;
+    background-color: #0070f3;
+    border-radius: 0;
+  }
+  
+  .settingsDropdown a:hover {
+    background-color: #005bb5;
+  }
+  
+  /* Exibe o menu suspenso ao passar o mouse sobre o item Configurações */
+  .settings:hover .settingsDropdown {
+    display: block;
+  }
+  .content {
+  margin-left: 250px; /* Ajusta o conteúdo para não sobrepor a barra lateral */
+  padding: 20px;
+  width: calc(100% - 250px); /* Largura restante da tela */
+  position: relative; /* Necessário para o posicionamento do modal */
 }
+

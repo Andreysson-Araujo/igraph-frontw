@@ -1,0 +1,33 @@
+/* menu.module.css */
+
+
+
+.expandir .txtLink {
+  margin-left: 40px;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.expandir {
+  width: 300px;
+}
+
+.itemMenu {
+  transition: background 0.2s;
+}
+
+.itemMenu:hover {
+  background: #FF0077;
+}
+
+.icon {
+  font-size: 30px;
+  margin-left: 5px;
+}
+
+.txtLink {
+  margin-left: 70px;
+  transition: margin-left 0.5s, opacity 0.5s;
+  opacity: 0;
+  text-decoration: none;
+}
