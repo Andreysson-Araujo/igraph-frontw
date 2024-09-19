@@ -1,86 +1,133 @@
-import { useState } from 'react';
-import { 
-  Box, Button, FormControl, FormLabel, Heading, Input, Flex, useDisclosure
-} from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
+import { Box, Button, FormControl, FormLabel, Input, Select, Flex, Heading } from '@chakra-ui/react';
+import Modal from "./componets/Modal";
 import Menu from '@/pages/menu';
-import ModalRelatorio from './componets/Modal';
-import Modal from './componets/Modal';
 
 export default function Relatorios() {
-  const { isOpen, onOpen, onClose } = useDisclosure(); // Controle de abertura e fechamento do modal
-  const [inicio, setInicio] = useState(''); // Data de início
-  const [fim, setFim] = useState(''); // Data de fim
-  const [relatorio, setRelatorio] = useState<any[]>([]); // Armazena os dados do relatório
+  const [inicio, setInicio] = useState<string>('');
+  const [fim, setFim] = useState<string>('');
+  const [ano, setAno] = useState<number | ''>('');
+  const [mes, setMes] = useState<number | ''>('');
+  const [unidade, setUnidade] = useState<number | ''>('');
+  const [relatorio, setRelatorio] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [unidades, setUnidades] = useState<any[]>([]); // Para armazenar as unidades
 
-  // Função chamada ao enviar o formulário
+  // Fetch de todas as unidades ao carregar o componente
+  useEffect(() => {
+    fetch('http://localhost:3333/unidades')
+      .then(response => response.json())
+      .then(data => setUnidades(data))
+      .catch(error => console.error('Erro ao buscar Unidades:', error));
+  }, []);
+
   const handleSubmit = async () => {
     try {
-      const dataInicio = new Date(inicio);
-      const dataFim = new Date(fim);
+      let url = 'http://localhost:3333/atendimentos?';
+      const filters = [];
 
-      if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
-        console.error('Datas inválidas');
-        return;
-      }
+      if (ano) filters.push(`ano=${ano}`);
+      if (mes) filters.push(`mes=${mes}`);
+      if (unidade) filters.push(`unidade_id=${unidade}`);
+      if (inicio) filters.push(`inicio=${inicio}`);
+      if (fim) filters.push(`fim=${fim}`);
 
-      const mesInicio = dataInicio.getMonth() + 1; // Mês (1 a 12)
-      const anoInicio = dataInicio.getFullYear();
-      const mesFim = dataFim.getMonth() + 1;
-      const anoFim = dataFim.getFullYear();
-
-      let url = '';
-
-      if (anoInicio === anoFim && mesInicio === mesFim) {
-        url = `http://localhost:3333/atendimentos/${mesInicio}/${anoInicio}`;
-      } else if (anoInicio === anoFim) {
-        url = `http://localhost:3333/atendimentos/ano/${anoInicio}`;
-      } else {
-        console.error('Selecione um intervalo de mês e ano válido');
-        return;
-      }
+      url += filters.join('&');
 
       const response = await fetch(url);
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+      }
 
-      setRelatorio(data);
-      onOpen(); // Abre o modal com os resultados
+      const data = await response.json();
+      setRelatorio(data); // Salva os dados detalhados do relatório
+      setIsModalOpen(true); // Abre o modal ao receber os dados
     } catch (error) {
-      console.error('Erro ao gerar relatório:', error);
+      console.log('Erro ao gerar relatório:', error);
     }
   };
 
   return (
-    <Flex>
-      <Menu /> {/* Incluindo o menu lateral */}
-      <Box p="6" maxW="800px" mx="auto" ml={['0', '0', '300px']} w={['100%', '100%', 'calc(100% - 300px)']}>
-        <Heading mb="6">Relatórios</Heading>
-
-        <FormControl mb="4">
-          <FormLabel>Data de Início:</FormLabel>
-          <Input
-            type="date"
-            value={inicio}
-            onChange={(e) => setInicio(e.target.value)} // Atualiza o estado com a data de início
-          />
-        </FormControl>
-
-        <FormControl mb="4">
-          <FormLabel>Data de Fim:</FormLabel>
-          <Input
-            type="date"
-            value={fim}
-            onChange={(e) => setFim(e.target.value)} // Atualiza o estado com a data de fim
-          />
-        </FormControl>
-
-        <Button colorScheme="pink" onClick={handleSubmit}>Gerar Relatório</Button>
-
-        {/* Modal que será aberto com os resultados */}
-        <Modal
-          isOpen={isOpen}
-          onClose={onClose}
-          relatorio={relatorio} unidades={[]}        />
+    <>
+      <Box
+        w="20%"
+        bg="#f4f4f4"
+        p={5}
+        boxShadow="2px 0 5px rgba(0, 0, 0, 0.1)"
+      >
+        <Menu />
       </Box>
-    </Flex>
+      <Flex>
+        <Box p="6" maxW="800px" mx="auto">
+          <Heading mb="6">Relatórios</Heading>
+
+          <FormControl mb="4">
+            <FormLabel>Ano:</FormLabel>
+            <Select
+              value={ano}
+              onChange={(e) => setAno(Number(e.target.value))}
+              placeholder="Selecione o ano"
+            >
+              {/* Aqui você pode gerar os anos dinamicamente, por exemplo, de 2000 até o ano atual */}
+              {Array.from({ length: 25 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl mb="4">
+            <FormLabel>Mês:</FormLabel>
+            <Select
+              value={mes}
+              onChange={(e) => setMes(Number(e.target.value))}
+              placeholder="Selecione o mês"
+            >
+              {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+                <option key={month} value={month}>
+                  {month < 10 ? `0${month}` : month}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl mb="4">
+            <FormLabel>Unidade:</FormLabel>
+            <Select
+              value={unidade}
+              onChange={(e) => setUnidade(Number(e.target.value))}
+              placeholder="Selecione a unidade"
+            >
+              {unidades.map(u => (
+                <option key={u.id} value={u.id}>{u.nome}</option>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl mb="4">
+            <FormLabel>Data de Início:</FormLabel>
+            <Input
+              type="date"
+              value={inicio}
+              onChange={(e) => setInicio(e.target.value)} />
+          </FormControl>
+
+          <FormControl mb="4">
+            <FormLabel>Data de Fim:</FormLabel>
+            <Input
+              type="date"
+              value={fim}
+              onChange={(e) => setFim(e.target.value)} />
+          </FormControl>
+
+          <Button colorScheme="pink" onClick={handleSubmit}>Gerar Relatório</Button>
+        </Box>
+
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          relatorio={relatorio}
+        />
+      </Flex>
+    </>
   );
 }

@@ -1,49 +1,43 @@
-import { Box, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text } from '@chakra-ui/react';
-import styles from './Modal.module.css'
+import { FC } from 'react';
+import { Box, Button } from '@chakra-ui/react';
+import styles from './Modal.module.css';
 
-interface ModalRelatorioProps {
+interface RelatorioModalProps {
   isOpen: boolean;
   onClose: () => void;
-  relatorio: any[]; // Array de objetos que representa os dados do relatório
-  unidades: { id: string, nome: string }[]; // Array de unidades
+  relatorio: any[];
 }
 
-const ModalRelatorio: React.FC<ModalRelatorioProps> = ({ isOpen, onClose, relatorio, unidades }) => {
-
-  // Função para pegar o nome da unidade baseado no id
-  const getUnidadeNome = (unidadeId: string) => {
-    const unidade = unidades.find(u => u.id === unidadeId);
-    return unidade ? unidade.nome : 'Unidade não encontrada';
-  };
+const RelatorioModal: FC<RelatorioModalProps> = ({ isOpen, onClose, relatorio }) => {
+  if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="lg">
-      <ModalOverlay className={styles.modalOverlay} />
-      <ModalContent className={styles.modal}>
-        <ModalHeader className={styles.adcModal}>Resultados do Relatório</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+    <div className={styles.modalOverlay}>
+      <div className={styles.modal}>
+        <h2>Relatório de Atendimentos</h2>
+        <Box>
           {relatorio.length > 0 ? (
-            relatorio.map((item, index) => (
-              <Box key={index} mb="4">
-                {/* Exibe o nome da unidade com base no unidade_id */}
-                <Text><strong>Unidade:</strong> {getUnidadeNome(item.unidade_id)}</Text>
-                <Text><strong>Data:</strong> {new Date(item.data_de_atendimento).toLocaleDateString()}</Text>
-                <Text><strong>Detalhes:</strong> {item.detalhes}</Text>
-                <hr />
-              </Box>
-            ))
+            <ul>
+              {relatorio.map((item, index) => (
+                <li key={index}>
+                  <strong>Atendimento ID:</strong> {item.id} <br />
+                  <strong>Data de Atendimento:</strong> {new Date(item.data_de_atendimento).toLocaleDateString()} <br />
+                  <strong>Quantidade:</strong> {item.quantidade} <br />
+                  <strong>Serviço:</strong> {item.servico ? item.servico.nome : 'Serviço não encontrado'} <br />
+                  <strong>Usuário ID:</strong> {item.usuarios_id} <br />
+                  <strong>Unidade:</strong> {item.unidade ? item.unidade.nome : 'Unidade não encontrada'} <br />
+                  <hr />
+                </li>
+              ))}
+            </ul>
           ) : (
-            <Text>Nenhum dado encontrado.</Text>
+            <p>Nenhum dado encontrado.</p>
           )}
-        </ModalBody>
-
-        <ModalFooter>
-          <Button className={styles.cancel} onClick={onClose}>Fechar</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </Box>
+        <Button className={styles.cancel} onClick={onClose}>Fechar</Button>
+      </div>
+    </div>
   );
 };
 
-export default ModalRelatorio;
+export default RelatorioModal;
